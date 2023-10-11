@@ -1,0 +1,4 @@
+0 non demented
+1 very mildly demented
+2 mildly demented
+3 moderately demented

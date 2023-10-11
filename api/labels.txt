@@ -1,0 +1,15 @@
+0 Branched Retinal Vein Occlusion
+1 Central Retinal Vein Occlusion
+2 Congenital Disc Abnormality
+3 Mild-Moderate Non Proliferative Diabetic Retinopathy
+4 Severe Non Proliferative Diabetic Retinopathy 
+5 Proliferative Diabetic Retinopathy
+6 Macular Hole
+7 Normal
+8 Optic Atrophy
+9 Peripheral Retinal Degeneration
+10 Possible Glaucoma
+11 Retinal Artery Occlusion
+12 Retinitis Pigmentosa
+13 Rhegmatogenous RD
+14 Severe Hypertensive Retinopathy
