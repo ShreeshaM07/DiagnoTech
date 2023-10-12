@@ -47,16 +47,29 @@ def predict_fundus():
 
         # Make predictions with your model.
         predictions = model.predict(data)
+        
 
-        predicted_class_index = np.argmax(predictions)
+        
+        top_3_indices = np.argsort(predictions[0])[::-1][:3]
 
-        predicted_class_name = class_labels[predicted_class_index]
+        top_3_predictions = []
 
-        confidence = float(predictions[0][predicted_class_index])
+        # Get the top 3 predicted classes and their confidence levels
+        
+        for index in top_3_indices:
+            predicted_class_name = class_labels[index]
+            confidence = float(predictions[0][index])
+            top_3_predictions.append({'class': predicted_class_name, 'confidence': confidence})
 
         response = {
-            'predicted_class': predicted_class_name,
-            'confidence': confidence,
+            'top_3_predictions': top_3_predictions,
+            
+        }
+
+        
+
+        response = {
+            'top_3_predictions':top_3_predictions
         }
 
 
@@ -100,16 +113,26 @@ def predict_cancer():
 
         # Make predictions with your model.
         predictions = model.predict(data)
+        
 
-        predicted_class_index = np.argmax(predictions)
+        
+        top_3_indices = np.argsort(predictions[0])[::-1][:3]
 
-        predicted_class_name = class_labels[predicted_class_index]
+        top_3_predictions = []
 
-        confidence = float(predictions[0][predicted_class_index])
+        # Get the top 3 predicted classes and their confidence levels
+        
+        for index in top_3_indices:
+            predicted_class_name = class_labels[index]
+            confidence = float(predictions[0][index])
+            top_3_predictions.append({'class': predicted_class_name, 'confidence': confidence})
 
         response = {
-            'predicted_class': predicted_class_name,
-            'confidence': confidence,
+            'top_3_predictions': top_3_predictions,
+            
+        }
+        response = {
+            'top_3_predictions':top_3_predictions,
         }
 
 
@@ -155,15 +178,20 @@ def predict_alzheimer():
         # Make predictions with your model.
         predictions = model.predict(data)
 
-        predicted_class_index = np.argmax(predictions)
+        top_3_indices = np.argsort(predictions[0])[::-1][:3]
 
-        predicted_class_name = class_labels[predicted_class_index]
+        top_3_predictions = []
 
-        confidence = float(predictions[0][predicted_class_index])
+        # Get the top 3 predicted classes and their confidence levels
+        
+        for index in top_3_indices:
+            predicted_class_name = class_labels[index]
+            confidence = float(predictions[0][index])
+            top_3_predictions.append({'class': predicted_class_name, 'confidence': confidence})
 
         response = {
-            'predicted_class': predicted_class_name,
-            'confidence': confidence,
+            'top_3_predictions': top_3_predictions,
+            
         }
 
 

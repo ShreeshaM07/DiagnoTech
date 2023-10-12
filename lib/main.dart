@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 void main() {
   sqfliteFfiInit();
@@ -125,6 +126,8 @@ class FundusScreen extends StatefulWidget {
 }
 
 class _FundusScreenState extends State<FundusScreen> {
+  List<Map<String, dynamic>> _top3Predictions = [];
+
   String _prediction = '';
   double _confidence = 0.0;
   File? _selectedImage;
@@ -154,9 +157,18 @@ class _FundusScreenState extends State<FundusScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        List<Map<String, dynamic>> predictions =
+            List.from(data['top_3_predictions']);
         setState(() {
-          _prediction = data['predicted_class'];
-          _confidence = data['confidence'];
+          Map<String, dynamic>? highestConfidencePrediction =
+              predictions.reduce((prev, curr) =>
+                  (curr['confidence'] > prev['confidence']) ? curr : prev);
+          _top3Predictions = predictions;
+          _prediction = highestConfidencePrediction['class'] ??
+              ''; // Store the prediction class with highest confidence
+          _confidence = highestConfidencePrediction['confidence'] ??
+              0.0; // Store the highest confidence
+
           final name = _nameController.text;
           final age = int.parse(_ageController.text);
           final sex = _sexController.text; // Get the user's name
@@ -265,11 +277,113 @@ class _FundusScreenState extends State<FundusScreen> {
               ),
               const SizedBox(height: 20),
               Text('Prediction: $_prediction \nConfidence level: $_confidence'),
+              //const SizedBox(height: 20),
+              // Text('Confidence percentage'),
+              buildBarChart(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget buildBarChart() {
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: 350,
+        width: 175,
+        child: _top3Predictions.isEmpty
+            ? Center(child: Text('No predictions yet.'))
+            : Transform.rotate(
+                angle: 3.1428 / 2,
+                child: BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.center,
+                    barTouchData: BarTouchData(
+                      touchTooltipData: BarTouchTooltipData(
+                        tooltipBgColor: Colors.blueGrey,
+                      ),
+                    ),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: SideTitles(
+                        showTitles: true,
+                        rotateAngle: -90,
+                        margin: 20,
+                        getTitles: (double value) {
+                          if (value >= 0 && value < _top3Predictions.length) {
+                            String className =
+                                _top3Predictions[value.toInt()]['class'];
+
+                            return className;
+                          }
+                          return '';
+                        },
+                      ),
+                      leftTitles: SideTitles(
+                        showTitles: true,
+                        interval: 5, //it is the interval for the y axis values
+                      ),
+                    ),
+                    borderData: FlBorderData(show: false),
+                    barGroups: _top3Predictions
+                        .asMap()
+                        .entries
+                        .map(
+                          (entry) => BarChartGroupData(
+                            x: entry.key,
+                            barRods: [
+                              BarChartRodData(
+                                y: entry.value['confidence'] *
+                                    100, // Convert confidence to percentage
+                                colors: [_getColor(entry.value['class'])],
+                                width: 25,
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+
+  Color _getColor(String className) {
+    if (className == 'Proliferative Diabetic Retinopathy') {
+      return Colors.blue;
+    } else if (className == 'Severe Non Proliferative Diabetic Retinopathy') {
+      return Colors.green;
+    } else if (className ==
+        'Mild-Moderate Non Proliferative Diabetic Retinopathy') {
+      return Colors.orange;
+    } else if (className == 'Congenital Disc Abnormality') {
+      return Colors.indigo;
+    } else if (className == 'Macular Hole') {
+      return Colors.black;
+    } else if (className == 'Possible Glaucoma') {
+      return const Color.fromARGB(255, 255, 0, 234);
+    } else if (className == 'Optic Atrophy') {
+      return Colors.teal;
+    } else if (className == 'Normal') {
+      return Colors.cyan;
+    } else if (className == 'Rhegmatogenoous RD') {
+      return Colors.blueAccent;
+    } else if (className == 'Retinal Artery Occlusion') {
+      return Colors.red;
+    } else if (className == 'Central Retinal Vein Occlusion') {
+      return Colors.deepOrangeAccent;
+    } else if (className == 'Branched Retinal Vein Occlusion') {
+      return Colors.deepPurple;
+    } else if (className == 'Peripheral Retinal Degeneration') {
+      return Colors.grey;
+    } else if (className == 'Retinitis Pigmentosa') {
+      return Colors.greenAccent;
+    } else if (className == 'Severe Hypertensive Retinopathy') {
+      return Colors.yellow;
+    }
+    return Colors.blue;
   }
 }
 
@@ -380,7 +494,7 @@ class _HistoryPageState extends State<HistoryPage> {
           final prediction = _historyData[index];
           return Container(
             width: 200,
-            height: 150,
+            height: 200,
             child: ListTile(
               title: Text('Name: ${prediction['name']}'),
               subtitle: Column(
@@ -405,11 +519,15 @@ class lung_colonScreen extends StatefulWidget {
 }
 
 class _lung_colonScreenState extends State<lung_colonScreen> {
+  List<Map<String, dynamic>> _top3Predictions = [];
+
   String _prediction1 = '';
   double _confidence1 = 0.0;
 
   File? _selectedImage;
-  TextEditingController _nameController =
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
+  TextEditingController _sexController =
       TextEditingController(); // Add name controller
 
   final _databaseHelperX = DatabaseHelperX();
@@ -433,11 +551,25 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+
+        List<Map<String, dynamic>> predictions =
+            List.from(data['top_3_predictions']);
+
         setState(() {
-          _prediction1 = data['predicted_class'];
-          _confidence1 = data['confidence'];
+          Map<String, dynamic>? highestConfidencePrediction =
+              predictions.reduce((prev, curr) =>
+                  (curr['confidence'] > prev['confidence']) ? curr : prev);
+          _top3Predictions = predictions;
+
+          _prediction1 = highestConfidencePrediction['class'] ??
+              ''; // Store the prediction class with highest confidence
+          _confidence1 = highestConfidencePrediction['confidence'] ?? 0.0;
+
           final name = _nameController.text; // Get the user's name
-          _databaseHelperX.insertData(name, _prediction1, _confidence1);
+          final age = int.parse(_ageController.text);
+          final sex = _sexController.text; // Get the user's name
+          _databaseHelperX.insertData(
+              name, age, sex, _prediction1, _confidence1);
         });
       } else {
         throw Exception('Failed to make a prediction.');
@@ -490,46 +622,143 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 20,
-              width: 100,
-            ),
-            SizedBox(
-              width: 200,
-              child: TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: 'Name'),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 20,
+                width: 100,
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _selectImage,
-              child: const Text('Select Image'),
-            ),
-            const SizedBox(height: 20),
-            if (_selectedImage != null)
-              Image.file(
-                _selectedImage!,
-                height: 200,
+              SizedBox(
                 width: 200,
-              )
-            else
-              const Text('No image selected.'),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _makePrediction,
-              child: const Text('Get Prediction'),
-            ),
-            const SizedBox(height: 20),
-            Text('Prediction: $_prediction1 \nConfidence level: $_confidence1'),
-          ],
+                child: TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(labelText: 'Name'),
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  controller: _ageController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: 'Age'),
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: TextFormField(
+                  controller: _sexController,
+                  decoration: InputDecoration(labelText: 'Sex'),
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _selectImage,
+                child: const Text('Select Image'),
+              ),
+              const SizedBox(height: 20),
+              if (_selectedImage != null)
+                Image.file(
+                  _selectedImage!,
+                  height: 200,
+                  width: 200,
+                )
+              else
+                const Text('No image selected.'),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _makePrediction,
+                child: const Text('Get Prediction'),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                  'Prediction: $_prediction1 \nConfidence level: $_confidence1'),
+              buildBarChart(),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Widget buildBarChart() {
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: 350,
+        width: 175,
+        child: _top3Predictions.isEmpty
+            ? Center(child: Text('No predictions yet.'))
+            : Transform.rotate(
+                angle: 3.1428 / 2,
+                child: BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.center,
+                    barTouchData: BarTouchData(
+                      touchTooltipData: BarTouchTooltipData(
+                        tooltipBgColor: Colors.blueGrey,
+                      ),
+                    ),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: SideTitles(
+                        showTitles: true,
+                        rotateAngle: -90,
+                        margin: 20,
+                        getTitles: (double value) {
+                          if (value >= 0 && value < _top3Predictions.length) {
+                            String className =
+                                _top3Predictions[value.toInt()]['class'];
+
+                            return className;
+                          }
+                          return '';
+                        },
+                      ),
+                      leftTitles: SideTitles(
+                        showTitles: true,
+                        interval: 5, //it is the interval for the y axis values
+                      ),
+                    ),
+                    borderData: FlBorderData(show: false),
+                    barGroups: _top3Predictions
+                        .asMap()
+                        .entries
+                        .map(
+                          (entry) => BarChartGroupData(
+                            x: entry.key,
+                            barRods: [
+                              BarChartRodData(
+                                y: entry.value['confidence'] *
+                                    100, // Convert confidence to percentage
+                                colors: [_getColor(entry.value['class'])],
+                                width: 25,
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+
+  Color _getColor(String className) {
+    if (className == 'Colon adenocarcinoma') {
+      return Colors.blue;
+    } else if (className == 'Colon benign tissue') {
+      return Colors.green;
+    } else if (className == 'Lung adenocarcinoma') {
+      return Colors.orange;
+    } else if (className == 'Lung benign tissue') {
+      return Colors.indigo;
+    } else if (className == 'Lung squamous cell carcinoma') {
+      return Colors.black;
+    }
+    return Colors.blue;
   }
 }
 
@@ -540,13 +769,13 @@ class DatabaseHelperX {
     if (_database == null) {
       final dbPath = await getDatabasesPath();
       //final documentsDirectory = await getApplicationDocumentsDirectory();
-      final databasePath = join(dbPath, 'lung_colon.db');
+      final databasePath = join(dbPath, 'lung_colon_v2.db');
 
       _database = await openDatabase(
         databasePath,
         onCreate: (db, version) {
           return db.execute(
-            'CREATE TABLE predictions(id INTEGER PRIMARY KEY, name TEXT, prediction TEXT, confidence REAL)',
+            'CREATE TABLE predictions(id INTEGER PRIMARY KEY, name TEXT, age INTEGER, sex TEXT, prediction TEXT, confidence REAL)',
           );
         },
         version: 1,
@@ -554,12 +783,18 @@ class DatabaseHelperX {
     }
   }
 
-  Future<void> insertData(
-      String name, String prediction, double confidence) async {
+  Future<void> insertData(String name, int age, String sex, String prediction,
+      double confidence) async {
     final db = await database;
     await db.insert(
       'predictions',
-      {'name': name, 'prediction': prediction, 'confidence': confidence},
+      {
+        'name': name,
+        'age': age,
+        'sex': sex,
+        'prediction': prediction,
+        'confidence': confidence,
+      },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
@@ -637,6 +872,8 @@ class _HistoryPageStateX extends State<HistoryPageX> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text('Age: ${prediction['age']}'),
+                Text('Sex: ${prediction['sex']}'),
                 Text('Prediction: ${prediction['prediction']}'),
                 Text('Confidence level: ${prediction['confidence']}'),
               ],
@@ -654,6 +891,8 @@ class AlzheimerScreen extends StatefulWidget {
 }
 
 class _AlzheimerScreenState extends State<AlzheimerScreen> {
+  List<Map<String, dynamic>> _top3Predictions = [];
+
   String _prediction = '';
   double _confidence = 0.0;
   File? _selectedImage;
@@ -683,9 +922,18 @@ class _AlzheimerScreenState extends State<AlzheimerScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        List<Map<String, dynamic>> predictions =
+            List.from(data['top_3_predictions']);
         setState(() {
-          _prediction = data['predicted_class'];
-          _confidence = data['confidence'];
+          Map<String, dynamic>? highestConfidencePrediction =
+              predictions.reduce((prev, curr) =>
+                  (curr['confidence'] > prev['confidence']) ? curr : prev);
+          _top3Predictions = predictions;
+          _prediction = highestConfidencePrediction['class'] ??
+              ''; // Store the prediction class with highest confidence
+          _confidence = highestConfidencePrediction['confidence'] ??
+              0.0; // Store the highest confidence
+
           final name = _nameController.text; // Get the user's name
           final age = int.parse(_ageController.text);
           final sex = _sexController.text; // Get the user's name
@@ -794,11 +1042,88 @@ class _AlzheimerScreenState extends State<AlzheimerScreen> {
               ),
               const SizedBox(height: 20),
               Text('Prediction: $_prediction \nConfidence level: $_confidence'),
+              buildBarChart(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget buildBarChart() {
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: 350,
+        width: 175,
+        child: _top3Predictions.isEmpty
+            ? Center(child: Text('No predictions yet.'))
+            : Transform.rotate(
+                angle: 3.1428 / 2,
+                child: BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.center,
+                    barTouchData: BarTouchData(
+                      touchTooltipData: BarTouchTooltipData(
+                        tooltipBgColor: Colors.blueGrey,
+                      ),
+                    ),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: SideTitles(
+                        showTitles: true,
+                        rotateAngle: -90,
+                        margin: 20,
+                        getTitles: (double value) {
+                          if (value >= 0 && value < _top3Predictions.length) {
+                            String className =
+                                _top3Predictions[value.toInt()]['class'];
+
+                            return className;
+                          }
+                          return '';
+                        },
+                      ),
+                      leftTitles: SideTitles(
+                        showTitles: true,
+                        interval: 5, //it is the interval for the y axis values
+                      ),
+                    ),
+                    borderData: FlBorderData(show: false),
+                    barGroups: _top3Predictions
+                        .asMap()
+                        .entries
+                        .map(
+                          (entry) => BarChartGroupData(
+                            x: entry.key,
+                            barRods: [
+                              BarChartRodData(
+                                y: entry.value['confidence'] *
+                                    100, // Convert confidence to percentage
+                                colors: [_getColor(entry.value['class'])],
+                                width: 25,
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+
+  Color _getColor(String className) {
+    if (className == 'non demented') {
+      return Colors.blue;
+    } else if (className == 'very mildly demented') {
+      return Colors.green;
+    } else if (className == 'mildly demented') {
+      return Colors.orange;
+    } else if (className == 'moderately demented') {
+      return Colors.indigo;
+    }
+    return Colors.blue;
   }
 }
 
