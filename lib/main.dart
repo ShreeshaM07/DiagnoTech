@@ -284,7 +284,7 @@ class _FundusScreenState extends State<FundusScreen> {
                           'Prediction: $_prediction \nConfidence level: $_confidence')
                       : const CircularProgressIndicator(),
                 ),
-              )
+              ),
               //const SizedBox(height: 20),
               // Text('Confidence percentage'),
               buildBarChart(),
@@ -369,7 +369,7 @@ class _FundusScreenState extends State<FundusScreen> {
     } else if (className == 'Congenital Disc Abnormality') {
       return Colors.indigo;
     } else if (className == 'Macular Hole') {
-      return Colors.black;
+      return Color.fromARGB(255, 17, 72, 9);
     } else if (className == 'Possible Glaucoma') {
       return const Color.fromARGB(255, 255, 0, 234);
     } else if (className == 'Optic Atrophy') {
@@ -679,27 +679,26 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                setState(() {
-                  _isLoading = true;
-                });
-                await _makePrediction();
-                setState(() {
-                  _isLoading = false;
-                });
-              },
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  await _makePrediction();
+                  setState(() {
+                    _isLoading = false;
+                  });
+                },
                 child: const Text('Get Prediction'),
               ),
               const SizedBox(height: 20),
               Container(
-              //widget shown according to the state
-              child: Center(
-                child: !_isLoading
-                    ? Text(
-                  
-                        'Prediction: $_prediction1 \nConfidence level: $_confidence1')
-                    : const CircularProgressIndicator(),
+                //widget shown according to the state
+                child: Center(
+                  child: !_isLoading
+                      ? Text(
+                          'Prediction: $_prediction1 \nConfidence level: $_confidence1')
+                      : const CircularProgressIndicator(),
+                ),
               ),
-            )
               buildBarChart(),
             ],
           ),
@@ -781,7 +780,7 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
     } else if (className == 'Lung benign tissue') {
       return Colors.indigo;
     } else if (className == 'Lung squamous cell carcinoma') {
-      return Colors.black;
+      return const Color.fromARGB(255, 255, 0, 0);
     }
     return Colors.blue;
   }
@@ -1083,7 +1082,7 @@ class _AlzheimerScreenState extends State<AlzheimerScreen> {
                           'Prediction: $_prediction \nConfidence level: $_confidence')
                       : const CircularProgressIndicator(),
                 ),
-              )
+              ),
               buildBarChart(),
             ],
           ),
