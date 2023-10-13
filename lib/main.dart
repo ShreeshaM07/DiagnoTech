@@ -219,75 +219,97 @@ class _FundusScreenState extends State<FundusScreen> {
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const SizedBox(
-                height: 20,
-                width: 100,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 30,
+                    width: 100,
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(labelText: 'Name'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _ageController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: 'Age'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _sexController,
+                      decoration: InputDecoration(labelText: 'Sex'),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: ElevatedButton(
+                      onPressed: _selectImage,
+                      child: const Text('Select Image'),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  if (_selectedImage != null)
+                    Image.file(
+                      _selectedImage!,
+                      height: 240,
+                      width: 240,
+                      fit: BoxFit.fill,
+                    )
+                  else
+                    const Text('No image selected.'),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        await _makePrediction();
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      },
+                      child: const Text('Get Prediction'),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Container(
+                    //widget shown according to the state
+                    child: Center(
+                      child: !_isLoading
+                          ? Text(
+                              'Prediction: $_prediction \nConfidence level: $_confidence')
+                          : const CircularProgressIndicator(),
+                    ),
+                  ),
+                  //const SizedBox(height: 20),
+                  // Text('Confidence percentage'),
+                ],
               ),
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Name'),
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  buildBarChart(),
+                ],
               ),
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  controller: _ageController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Age'),
-                ),
-              ),
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  controller: _sexController,
-                  decoration: InputDecoration(labelText: 'Sex'),
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _selectImage,
-                child: const Text('Select Image'),
-              ),
-              const SizedBox(height: 20),
-              if (_selectedImage != null)
-                Image.file(
-                  _selectedImage!,
-                  height: 200,
-                  width: 200,
-                )
-              else
-                const Text('No image selected.'),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  await _makePrediction();
-                  setState(() {
-                    _isLoading = false;
-                  });
-                },
-                child: const Text('Get Prediction'),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                //widget shown according to the state
-                child: Center(
-                  child: !_isLoading
-                      ? Text(
-                          'Prediction: $_prediction \nConfidence level: $_confidence')
-                      : const CircularProgressIndicator(),
-                ),
-              ),
-              //const SizedBox(height: 20),
-              // Text('Confidence percentage'),
-              buildBarChart(),
             ],
           ),
         ),
@@ -299,7 +321,7 @@ class _FundusScreenState extends State<FundusScreen> {
     return SingleChildScrollView(
       child: SizedBox(
         height: 350,
-        width: 175,
+        width: 225,
         child: _top3Predictions.isEmpty
             ? Center(child: Text('No predictions yet.'))
             : Transform.rotate(
@@ -345,7 +367,7 @@ class _FundusScreenState extends State<FundusScreen> {
                                 y: entry.value['confidence'] *
                                     100, // Convert confidence to percentage
                                 colors: [_getColor(entry.value['class'])],
-                                width: 25,
+                                width: 37.5,
                               ),
                             ],
                           ),
@@ -633,73 +655,95 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Column(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 20,
-                width: 100,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 30,
+                    width: 100,
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(labelText: 'Name'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _ageController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: 'Age'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _sexController,
+                      decoration: InputDecoration(labelText: 'Sex'),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: ElevatedButton(
+                      onPressed: _selectImage,
+                      child: const Text('Select Image'),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  if (_selectedImage != null)
+                    Image.file(
+                      _selectedImage!,
+                      height: 240,
+                      width: 240,
+                      fit: BoxFit.fill,
+                    )
+                  else
+                    const Text('No image selected.'),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        await _makePrediction();
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      },
+                      child: const Text('Get Prediction'),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Container(
+                    //widget shown according to the state
+                    child: Center(
+                      child: !_isLoading
+                          ? Text(
+                              'Prediction: $_prediction1 \nConfidence level: $_confidence1')
+                          : const CircularProgressIndicator(),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Name'),
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  buildBarChart(),
+                ],
               ),
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  controller: _ageController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Age'),
-                ),
-              ),
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  controller: _sexController,
-                  decoration: InputDecoration(labelText: 'Sex'),
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _selectImage,
-                child: const Text('Select Image'),
-              ),
-              const SizedBox(height: 20),
-              if (_selectedImage != null)
-                Image.file(
-                  _selectedImage!,
-                  height: 200,
-                  width: 200,
-                )
-              else
-                const Text('No image selected.'),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  await _makePrediction();
-                  setState(() {
-                    _isLoading = false;
-                  });
-                },
-                child: const Text('Get Prediction'),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                //widget shown according to the state
-                child: Center(
-                  child: !_isLoading
-                      ? Text(
-                          'Prediction: $_prediction1 \nConfidence level: $_confidence1')
-                      : const CircularProgressIndicator(),
-                ),
-              ),
-              buildBarChart(),
             ],
           ),
         ),
@@ -711,7 +755,7 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
     return SingleChildScrollView(
       child: SizedBox(
         height: 350,
-        width: 175,
+        width: 225,
         child: _top3Predictions.isEmpty
             ? Center(child: Text('No predictions yet.'))
             : Transform.rotate(
@@ -757,7 +801,7 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
                                 y: entry.value['confidence'] *
                                     100, // Convert confidence to percentage
                                 colors: [_getColor(entry.value['class'])],
-                                width: 25,
+                                width: 37.5,
                               ),
                             ],
                           ),
@@ -1017,73 +1061,95 @@ class _AlzheimerScreenState extends State<AlzheimerScreen> {
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Column(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 20,
-                width: 100,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 30,
+                    width: 100,
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(labelText: 'Name'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _ageController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: 'Age'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: TextFormField(
+                      controller: _sexController,
+                      decoration: InputDecoration(labelText: 'Sex'),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: ElevatedButton(
+                      onPressed: _selectImage,
+                      child: const Text('Select Image'),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  if (_selectedImage != null)
+                    Image.file(
+                      _selectedImage!,
+                      height: 240,
+                      width: 240,
+                      fit: BoxFit.fill,
+                    )
+                  else
+                    const Text('No image selected.'),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        await _makePrediction();
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      },
+                      child: const Text('Get Prediction'),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Container(
+                    //widget shown according to the state
+                    child: Center(
+                      child: !_isLoading
+                          ? Text(
+                              'Prediction: $_prediction \nConfidence level: $_confidence')
+                          : const CircularProgressIndicator(),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Name'),
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  buildBarChart(),
+                ],
               ),
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  controller: _ageController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Age'),
-                ),
-              ),
-              SizedBox(
-                width: 200,
-                child: TextFormField(
-                  controller: _sexController,
-                  decoration: InputDecoration(labelText: 'Sex'),
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _selectImage,
-                child: const Text('Select Image'),
-              ),
-              const SizedBox(height: 20),
-              if (_selectedImage != null)
-                Image.file(
-                  _selectedImage!,
-                  height: 200,
-                  width: 200,
-                )
-              else
-                const Text('No image selected.'),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  await _makePrediction();
-                  setState(() {
-                    _isLoading = false;
-                  });
-                },
-                child: const Text('Get Prediction'),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                //widget shown according to the state
-                child: Center(
-                  child: !_isLoading
-                      ? Text(
-                          'Prediction: $_prediction \nConfidence level: $_confidence')
-                      : const CircularProgressIndicator(),
-                ),
-              ),
-              buildBarChart(),
             ],
           ),
         ),
@@ -1095,7 +1161,7 @@ class _AlzheimerScreenState extends State<AlzheimerScreen> {
     return SingleChildScrollView(
       child: SizedBox(
         height: 350,
-        width: 175,
+        width: 225,
         child: _top3Predictions.isEmpty
             ? Center(child: Text('No predictions yet.'))
             : Transform.rotate(
@@ -1141,7 +1207,7 @@ class _AlzheimerScreenState extends State<AlzheimerScreen> {
                                 y: entry.value['confidence'] *
                                     100, // Convert confidence to percentage
                                 colors: [_getColor(entry.value['class'])],
-                                width: 25,
+                                width: 37.5,
                               ),
                             ],
                           ),
