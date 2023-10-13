@@ -101,19 +101,10 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: 550, // Set your desired width and height
-            height: 550,
-            child: Image.asset(
-                'assets/DiagnoTech Logo.jpg'), // Use the asset path you specified in pubspec.yaml
+          Expanded(
+            flex: 1,
+            child: Image.asset('assets/DiagnoTech Logo.jpg'),
           ),
-          // Text(
-          //   "\n\nThe 'MediPal LENS PRO' app is a powerful tool for doctors, leveraging advanced machine learning algorithms\n to analyze patient data, medical images, and symptoms. It aids in the rapid and accurate\nidentification of diseases, providing real-time diagnostic insights, treatment recommendations, \nand relevant medical literature, enhancing clinical decision-making and patient care.",
-          //   style: TextStyle(
-          //     fontSize: 18, // Set your desired font size
-          //     color: Colors.blue,
-          //   ),
-          // )
         ],
       ),
     );
@@ -126,6 +117,7 @@ class FundusScreen extends StatefulWidget {
 }
 
 class _FundusScreenState extends State<FundusScreen> {
+  bool _isLoading = false;
   List<Map<String, dynamic>> _top3Predictions = [];
 
   String _prediction = '';
@@ -272,11 +264,27 @@ class _FundusScreenState extends State<FundusScreen> {
                 const Text('No image selected.'),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _makePrediction,
+                onPressed: () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  await _makePrediction();
+                  setState(() {
+                    _isLoading = false;
+                  });
+                },
                 child: const Text('Get Prediction'),
               ),
               const SizedBox(height: 20),
-              Text('Prediction: $_prediction \nConfidence level: $_confidence'),
+              Container(
+                //widget shown according to the state
+                child: Center(
+                  child: !_isLoading
+                      ? Text(
+                          'Prediction: $_prediction \nConfidence level: $_confidence')
+                      : const CircularProgressIndicator(),
+                ),
+              )
               //const SizedBox(height: 20),
               // Text('Confidence percentage'),
               buildBarChart(),
@@ -519,6 +527,7 @@ class lung_colonScreen extends StatefulWidget {
 }
 
 class _lung_colonScreenState extends State<lung_colonScreen> {
+  bool _isLoading = false;
   List<Map<String, dynamic>> _top3Predictions = [];
 
   String _prediction1 = '';
@@ -669,12 +678,28 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
                 const Text('No image selected.'),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _makePrediction,
+                onPressed: () async {
+                setState(() {
+                  _isLoading = true;
+                });
+                await _makePrediction();
+                setState(() {
+                  _isLoading = false;
+                });
+              },
                 child: const Text('Get Prediction'),
               ),
               const SizedBox(height: 20),
-              Text(
-                  'Prediction: $_prediction1 \nConfidence level: $_confidence1'),
+              Container(
+              //widget shown according to the state
+              child: Center(
+                child: !_isLoading
+                    ? Text(
+                  
+                        'Prediction: $_prediction1 \nConfidence level: $_confidence1')
+                    : const CircularProgressIndicator(),
+              ),
+            )
               buildBarChart(),
             ],
           ),
@@ -891,6 +916,7 @@ class AlzheimerScreen extends StatefulWidget {
 }
 
 class _AlzheimerScreenState extends State<AlzheimerScreen> {
+  bool _isLoading = false;
   List<Map<String, dynamic>> _top3Predictions = [];
 
   String _prediction = '';
@@ -1037,11 +1063,27 @@ class _AlzheimerScreenState extends State<AlzheimerScreen> {
                 const Text('No image selected.'),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _makePrediction,
+                onPressed: () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  await _makePrediction();
+                  setState(() {
+                    _isLoading = false;
+                  });
+                },
                 child: const Text('Get Prediction'),
               ),
               const SizedBox(height: 20),
-              Text('Prediction: $_prediction \nConfidence level: $_confidence'),
+              Container(
+                //widget shown according to the state
+                child: Center(
+                  child: !_isLoading
+                      ? Text(
+                          'Prediction: $_prediction \nConfidence level: $_confidence')
+                      : const CircularProgressIndicator(),
+                ),
+              )
               buildBarChart(),
             ],
           ),
@@ -1401,12 +1443,21 @@ class AboutHelpPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Help'),
       ),
-      body: const Padding(
+      body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Text('Help')],
-        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          RichText(
+              text: const TextSpan(
+                  style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                  children: [
+                TextSpan(
+                    text: "For more help, contact us at:\n",
+                    style: TextStyle(fontSize: 18)),
+                TextSpan(
+                    text: "abhaylejith@gmail.com\nshreesha2k22@yahoo.com",
+                    style: TextStyle(fontSize: 14))
+              ]))
+        ]),
       ),
     );
   }
@@ -1417,44 +1468,69 @@ class AboutReferencePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Help'),
+        title: const Text('References'),
       ),
-      body: const Padding(
+      body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '\References\n\n',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              '1) "Automatic detection of 39 fundus diseases and conditions in retinal photographs using deep neural networks"\n https://www.nature.com/articles/s41467-021-25138-w',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text('   -our fundus AI model was trained using this dataset'),
-            Text(
-              '2) https://teachablemachine.withgoogle.com/train/image',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text('   -our model was trained using teachable machine'),
-            Text(
-              '3) https://docs.flutter.dev/ ',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text('   -our application was built using Flutter'),
+            RichText(
+                text: const TextSpan(
+                    style: TextStyle(
+                        color: Color.fromARGB(
+                            255, 0, 0, 0)), //style for all textspan
+                    children: [
+                  TextSpan(
+                      text: "Datasets:\n\n",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: "1)Fundus images\n",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          "Cen, LP., Ji, J., Lin, JW. et al. Automatic detection of 39 fundus diseases and conditions in retinal photographs using deep neural networks. Nat Commun 12, 4828 (2021). https://doi.org/10.1038/s41467-021-25138-w\n",
+                      style: TextStyle(fontSize: 16)),
+                  TextSpan(
+                      text: "2)Lung/Colon Cancer histopathological images\n",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          "Borkowski AA, Bui MM, Thomas LB, Wilson CP, DeLand LA, Mastorides SM. Lung and Colon Cancer Histopathological Image Dataset (LC25000). arXiv:1912.12142v1 [eess.IV], 2019\n",
+                      style: TextStyle(fontSize: 16)),
+                  TextSpan(
+                      text: "3)Alzheimer's brain MRI images \n",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          "https://www.kaggle.com/datasets/tourist55/alzheimers-dataset-4-class-of-images/data\n\n",
+                      style: TextStyle(fontSize: 16)),
+                  TextSpan(
+                      text: "Others:\n\n",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          "1)Code referred to for fundus and lung/colon cancer model\n",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          "https://www.kaggle.com/code/tenebris97/lung-colon-all-5-classes-efficientnetb7-98\n",
+                      style: TextStyle(fontSize: 16)),
+                  TextSpan(
+                      text:
+                          "2)Google Teachable Machine for alzheimer's model\n",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: "https://teachablemachine.withgoogle.com/\n",
+                      style: TextStyle(fontSize: 16)),
+                ]))
           ],
         ),
       ),
