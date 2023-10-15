@@ -195,6 +195,44 @@ class _FundusScreenState extends State<FundusScreen> {
     );
   }
 
+  String getEyeConditionDescription(String prediction) {
+    switch (prediction) {
+      case 'Proliferative Diabetic Retinopathy':
+        return 'Description: Abnormal growth of blood vessels in the retina due to diabetes.\nRemedy: Laser treatment, injections, or surgery.\nEmergency: Consult a doctor as soon as possible.';
+      case 'Severe Non Proliferative Diabetic Retinopathy':
+        return 'Description: Advanced stage of diabetic retinopathy without abnormal blood vessel growth.\nRemedy: Laser treatment, injections, or surgery.\nEmergency: Requires prompt medical attention.';
+      // Add other eye conditions here
+      case 'Mild-Moderate Non Proliferative Diabetic Retinopathy':
+        return 'Description: Early stage of diabetic retinopathy without significant symptoms.\nRemedy: Managing diabetes, regular eye check-ups.\nEmergency: Can be managed over time but needs monitoring.';
+      case 'Congenital Disc Abnormality':
+        return 'Description: Structural abnormality of the optic disc present from birth.\nRemedy: Monitoring, corrective lenses if necessary.\nEmergency: Not an emergency, but requires ongoing monitoring.';
+      case 'Macular Hole':
+        return 'Description: A small break in the macula, leading to central vision loss.\nRemedy: Surgical repair.\nEmergency: Requires immediate attention from an eye specialist.';
+      case 'Possible Glaucoma':
+        return 'Description: Increased pressure in the eye damaging the optic nerve.\nRemedy: Eye drops, laser treatment, or surgery.\nEmergency: Urgent consultation required to prevent vision loss.';
+      case 'Optic Atrophy':
+        return 'Description: Damage to the optic nerve, leading to vision impairment.\nRemedy: Treatment depends on the underlying cause; managing contributing conditions.\nEmergency: Not urgent, but requires medical evaluation.';
+      case 'Normal':
+        return 'Description: No significant eye abnormalities or diseases.\nRemedy: Regular eye check-ups to maintain eye health.\nEmergency: Not applicable.';
+      case 'Rhegmatogenoous RD':
+        return 'Description: Separation of the retina from the underlying tissue.\nRemedy: Surgical intervention to reattach the retina.\nmergency: Requires immediate surgery to prevent permanent vision loss.';
+      case 'Retinal Artery Occlusion':
+        return 'Description: Blockage of the retinal artery, leading to sudden vision loss.\nRemedy: Immediate medical attention, attempts to dissolve the clot.\nEmergency: Medical emergency, urgent consultation needed.';
+      case 'Central Retinal Vein Occlusion':
+        return 'Description: Blockage of the central retinal vein, causing sudden vision loss.\nRemedy: Managing underlying conditions, laser treatment in some cases.\nEmergency: Requires prompt medical attention.';
+      case 'Branched Retinal Vein Occlusion':
+        return 'Description: Blockage in one of the branch veins of the retina.\nRemedy: Treatment of underlying conditions, regular monitoring.\nEmergency: Not an emergency but needs medical attention.';
+      case 'Peripheral Retinal Degeneration':
+        return 'Description: Breakdown or thinning of the peripheral retina.\nRemedy: Regular monitoring, treatment if it progresses.\nEmergency: Not an emergency, but requires ongoing evaluation.';
+      case 'Retinitis Pigmentosa':
+        return 'Description: Genetic disorder causing degeneration of the retina.\nRemedy: Managing symptoms, genetic counseling.\nEmergency: Not an emergency, but requires specialized care.';
+      case 'Severe Hypertensive Retinopathy':
+        return 'Description: Damage to the retina due to high blood pressure.\nRemedy: Managing blood pressure, lifestyle changes, medication.\nEmergency: Urgent medical attention needed to control blood pressure and prevent further damage.';
+      default:
+        return 'No description available for this condition.';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -295,7 +333,9 @@ class _FundusScreenState extends State<FundusScreen> {
                     child: Center(
                       child: !_isLoading
                           ? Text(
-                              'Prediction: $_prediction \nConfidence level: $_confidence')
+                              'Prediction: $_prediction \nConfidence level: $_confidence',
+                              style: TextStyle(fontSize: 16),
+                            )
                           : const CircularProgressIndicator(),
                     ),
                   ),
@@ -308,6 +348,26 @@ class _FundusScreenState extends State<FundusScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   buildBarChart(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  _prediction.isNotEmpty
+                      ? Column(
+                          children: [
+                            Text(
+                              'Predicted Eye Condition: $_prediction',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              getEyeConditionDescription(_prediction),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        )
+                      : Container(),
                 ],
               ),
             ],
@@ -631,6 +691,24 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
     );
   }
 
+  String getLungConditionDescription(String prediction) {
+    switch (prediction) {
+      case 'Colon adenocarcinoma':
+        return 'Description:Colon adenocarcinoma is a type of cancer that starts in the cells lining the colon.\n It is a malignant tumor.\nRemedy: Treatment typically involves surgery to remove the tumor, chemotherapy, and sometimes radiation therapy.\n Treatment plans depend on the stage of cancer.\nEmergency: It is not an emergency, but early diagnosis and treatment are crucial for better outcomes. Consult a healthcare professional promptly\n if symptoms like persistent changes in bowel habits, blood in stool, or abdominal pain occur.';
+      case 'Colon benign tissue':
+        return 'Description: This refers to non-cancerous growth or tissue in the colon. Benign tissues are not cancerous \nand do not spread to other parts of the body.\nRemedy: Benign tissues usually do not require specific treatment unless they cause symptoms \nor complications. In such cases, surgical removal might be considered.\nEmergency: Not an emergency, but consult a doctor if symptoms like pain, bleeding, or bowel obstruction occur.';
+      // Add other eye conditions here
+      case 'Lung adenocarcinoma':
+        return 'Description:  Lung adenocarcinoma is the most common type of non-small cell lung cancer. \nIt originates in the glandular cells of the lungs.\nRemedy:Treatment options include surgery, chemotherapy, targeted therapies, immunotherapy, and radiation therapy, \noften used in combination depending on the stage and individual health factors.\n Emergency : Its not an immediate emergency , promt medical attention is necessary Early Diagnosis and \ntreatment are crucial for managaing lung cancer';
+      case 'Lung benign tissue':
+        return 'Description: Beningn lung tissue growths or tumours that are non cancerous and do not spread .\nRemedy: Benign lung tumours do not require treatment unless they cause symtoms like breathing difficulties or pain. \nIn some cases if the tumour is large or causes problems , surgical removal might be considered .\nEmergency:  Not an emergency but seek medical advise if there are symptoms like shortness of breath ,\nchest pain or persistent coughing arise.';
+      case 'Lung squamous cell carcinoma':
+        return 'Description: Lung squamous cell carcinoma is a type of non small cell lung cancer that begins in the \nsquamoues cells lining the bronchial tubes.\n remedy :Treatment options include surgery,chemotherapy,radiation therapy , \ntargeted therapy and immunotherapy .Treatment plans depend on the stage of the \npatient and the overall health. \nEmergency : While not an immediate emergency ,early diagnosis and timely treatment are critical. \nSeek medical attention promptly if symptoms such as cough ,chest pain or difficulty in breathing persists.  ';
+      default:
+        return 'No description available for this condition.';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -731,7 +809,9 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
                     child: Center(
                       child: !_isLoading
                           ? Text(
-                              'Prediction: $_prediction1 \nConfidence level: $_confidence1')
+                              'Prediction: $_prediction1 \nConfidence level: $_confidence1',
+                              style: TextStyle(fontSize: 16),
+                            )
                           : const CircularProgressIndicator(),
                     ),
                   ),
@@ -742,6 +822,26 @@ class _lung_colonScreenState extends State<lung_colonScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   buildBarChart(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  _prediction1.isNotEmpty
+                      ? Column(
+                          children: [
+                            Text(
+                              'Predicted lung Condition: $_prediction1',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              getLungConditionDescription(_prediction1),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        )
+                      : Container(),
                 ],
               ),
             ],
@@ -1037,6 +1137,22 @@ class _AlzheimerScreenState extends State<AlzheimerScreen> {
     );
   }
 
+  String getLungConditionDescription(String prediction) {
+    switch (prediction) {
+      case 'non demented':
+        return 'Description: Individuals in this category do not exhibit significant\n signs of dementia. They have normal cognitive function and memory.\nRemedy: There is no specific medical treatment required for non-demented individuals. \nHowever, maintaining a healthy lifestyle, regular exercise, balanced diet, \nand staying mentally active can contribute to overall brain health and prevent cognitive decline.';
+      case 'very mildly demented':
+        return 'Description:  Individuals in this category exhibit very subtle signs \nof cognitive decline. They might experience occasional \nforgetfulness or mild lapses in memory.\nRemedy: Early intervention is crucial. Engaging in cognitive \nexercises, memory-enhancing activities, and social interactions can help. \nMedical professionals may prescribe medications or recommend cognitive\n therapies to manage symptoms and slow down the progression of dementia.';
+      // Add other eye conditions here
+      case 'mildly demented':
+        return 'Description:  Individuals in this stage show noticeable cognitive decline.\n They might have difficulty with memory, language, and daily tasks, \nimpacting their daily life.\nRemedy: Treatment may include medications to manage symptoms, cognitive therapies,\n and support from caregivers. Creating a structured environment, routine activities, \nand memory aids can assist in daily functioning.';
+      case 'moderately demented':
+        return 'Description: Individuals in this stage have significant cognitive impairment. \nThey may struggle with basic activities of daily living, experience severe memory loss, and have difficulty communicating.\nRemedy: Caregivers play a crucial role. Medical professionals may prescribe medications to manage symptoms and \nimprove quality of life. Specialized care facilities, occupational therapy, and \nsupport from healthcare providers and caregivers are essential.';
+      default:
+        return 'No description available for this condition.';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1137,7 +1253,9 @@ class _AlzheimerScreenState extends State<AlzheimerScreen> {
                     child: Center(
                       child: !_isLoading
                           ? Text(
-                              'Prediction: $_prediction \nConfidence level: $_confidence')
+                              'Prediction: $_prediction \nConfidence level: $_confidence',
+                              style: TextStyle(fontSize: 16),
+                            )
                           : const CircularProgressIndicator(),
                     ),
                   ),
@@ -1148,6 +1266,26 @@ class _AlzheimerScreenState extends State<AlzheimerScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   buildBarChart(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  _prediction.isNotEmpty
+                      ? Column(
+                          children: [
+                            Text(
+                              'Predicted alzheimer Condition: $_prediction',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              getLungConditionDescription(_prediction),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        )
+                      : Container(),
                 ],
               ),
             ],
@@ -1519,7 +1657,7 @@ class AboutHelpPage extends StatelessWidget {
                     text: "For more help, contact us at:\n",
                     style: TextStyle(fontSize: 18)),
                 TextSpan(
-                    text: "abhaylejith@gmail.com\nshreesha2k22@yahoo.com",
+                    text: "abhaylejith@gmail.com\nshreesham2k22@yahoo.com",
                     style: TextStyle(fontSize: 14))
               ]))
         ]),
