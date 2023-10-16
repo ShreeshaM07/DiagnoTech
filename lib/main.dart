@@ -214,7 +214,7 @@ class _FundusScreenState extends State<FundusScreen> {
         return 'Description: Damage to the optic nerve, leading to vision impairment.\nRemedy: Treatment depends on the underlying cause; managing contributing conditions.\nEmergency: Not urgent, but requires medical evaluation.';
       case 'Normal':
         return 'Description: No significant eye abnormalities or diseases.\nRemedy: Regular eye check-ups to maintain eye health.\nEmergency: Not applicable.';
-      case 'Rhegmatogenoous RD':
+      case 'Rhegmatogenous RD':
         return 'Description: Separation of the retina from the underlying tissue.\nRemedy: Surgical intervention to reattach the retina.\nmergency: Requires immediate surgery to prevent permanent vision loss.';
       case 'Retinal Artery Occlusion':
         return 'Description: Blockage of the retinal artery, leading to sudden vision loss.\nRemedy: Immediate medical attention, attempts to dissolve the clot.\nEmergency: Medical emergency, urgent consultation needed.';
