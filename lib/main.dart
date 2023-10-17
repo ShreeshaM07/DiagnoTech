@@ -584,7 +584,7 @@ class _HistoryPageState extends State<HistoryPage> {
           final prediction = _historyData[index];
           return Container(
             width: 200,
-            height: 200,
+            height: 125,
             child: ListTile(
               title: Text('Name: ${prediction['name']}'),
               subtitle: Column(
@@ -1035,16 +1035,20 @@ class _HistoryPageStateX extends State<HistoryPageX> {
         itemCount: _historyData.length,
         itemBuilder: (context, index) {
           final prediction = _historyData[index];
-          return ListTile(
-            title: Text('Name: ${prediction['name']}'),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Age: ${prediction['age']}'),
-                Text('Sex: ${prediction['sex']}'),
-                Text('Prediction: ${prediction['prediction']}'),
-                Text('Confidence level: ${prediction['confidence']}'),
-              ],
+          return Container(
+            width: 200,
+            height: 125,
+            child: ListTile(
+              title: Text('Name: ${prediction['name']}'),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Age: ${prediction['age']}'),
+                  Text('Sex: ${prediction['sex']}'),
+                  Text('Prediction: ${prediction['prediction']}'),
+                  Text('Confidence level: ${prediction['confidence']}'),
+                ],
+              ),
             ),
           );
         },
@@ -1479,7 +1483,7 @@ class _HistoryPageStateA extends State<HistoryPageA> {
           final prediction = _historyData[index];
           return Container(
             width: 200,
-            height: 150,
+            height: 125,
             child: ListTile(
               title: Text('Name: ${prediction['name']}'),
               subtitle: Column(
@@ -1598,7 +1602,7 @@ class AboutAppPage extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              "\n\nThe 'DiagnoTech' app is a powerful tool for doctors, leveraging advanced machine learning algorithms\n to analyze patient data, medical images, and symptoms. It aids in the rapid and accurate\nidentification of diseases, providing real-time diagnostic insights, treatment recommendations, \nand relevant medical literature, enhancing clinical decision-making and patient care.",
+              "\nThe 'DiagnoTech' app is a powerful tool for doctors, leveraging advanced machine learning algorithms\n to analyze patient data, medical images, and symptoms. It aids in the rapid and accurate\nidentification of diseases, providing real-time diagnostic insights, treatment recommendations, \nand relevant medical literature, enhancing clinical decision-making and patient care.",
               style: TextStyle(
                 fontSize: 18, // Set your desired font size
                 color: Colors.blue,
@@ -1614,22 +1618,11 @@ class AboutAppPage extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'Abhay Lejith',
+              'Abhay Lejith\nShreesha M',
               style: TextStyle(
                 fontSize: 18, // Set your desired font size
                 color: Colors.blue,
                 fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 8),
-            Center(
-              child: Text(
-                "Shreesha M",
-                style: TextStyle(
-                  fontSize: 18, // Set your desired font size
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                ),
               ),
             ),
           ],
