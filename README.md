@@ -27,3 +27,4 @@ Designed with both healthcare professionals and patients in mind, the app boasts
 `Inference Report`: The app then presents the user with an inference report. This report includes the disease or condition identified, along with confidence levels to provide an indication of the model's certainty in its diagnosis. Users can review this information and take appropriate actions, such as seeking medical advice or further testing.\
 
 
+![Screenshot (106)](https://github.com/ShreeshaM07/DiagnoTech/assets/120820143/d3520035-6a87-49bd-b859-2616b6d16f14)
